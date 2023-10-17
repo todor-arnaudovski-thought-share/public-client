@@ -56,7 +56,7 @@ export const CreatePost = () => {
       <form className="mb-5" onSubmit={onFormSubmitHandler}>
         <div>
           <label className="label">
-            <span className="label-text">What do you hate?</span>
+            <span className="label-text">What's on your mind?</span>
           </label>
           <input
             type="text"
