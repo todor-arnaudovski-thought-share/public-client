@@ -11,6 +11,7 @@ export const Register = () => {
     username: "",
     password: "",
   });
+  const [error, set_error] = useState<string | null>(null);
 
   const onInputsChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.currentTarget.name;
@@ -28,7 +29,7 @@ export const Register = () => {
     try {
       await register(inputs);
     } catch (err) {
-      console.error((err as Error).message);
+      set_error((err as Error).message);
     }
   };
 
@@ -64,12 +65,10 @@ export const Register = () => {
             autoComplete="on"
           />
         </div>
+        {error && <span className="block text-red-500 mb-5">{error}</span>}
         <button type="submit" className="btn btn-primary">
           Register
         </button>
-        {/* {errors.postContent && (
-    <span className="block text-red-500">{errors.postContent}</span>
-  )} */}
       </form>
     </>
   );

@@ -8,6 +8,7 @@ export const SignIn = () => {
     username: "",
     password: "",
   });
+  const [error, set_error] = useState<string | null>(null);
   const { setUser } = useUser();
 
   const onInputsChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,10 +26,11 @@ export const SignIn = () => {
 
     try {
       const user = await signIn(inputs);
-      console.log("", user);
-      setUser(user);
+      if (user) {
+        setUser(user);
+      }
     } catch (err) {
-      console.error((err as Error).message);
+      set_error((err as Error).message);
     }
   };
 
@@ -64,12 +66,10 @@ export const SignIn = () => {
             autoComplete="on"
           />
         </div>
+        {error && <span className="block text-red-500 mb-5">{error}</span>}
         <button type="submit" className="btn btn-primary">
           Sign in
         </button>
-        {/* {errors.postContent && (
-    <span className="block text-red-500">{errors.postContent}</span>
-  )} */}
       </form>
     </>
   );
