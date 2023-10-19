@@ -59,7 +59,6 @@ export const PostsList = () => {
     <>
       {posts.map((post, i) => {
         const isUpvotedByUser = checkIsUpvotedByUser(post);
-        console.log("isUpvotedByUser", isUpvotedByUser);
 
         return (
           <div key={i} className="card bg-primary-content shadow-xl mb-5">
