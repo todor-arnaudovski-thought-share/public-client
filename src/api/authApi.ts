@@ -13,6 +13,18 @@ const handleAxiosErrorMessage = (err: AxiosError) => {
   }
 };
 
+export const verifyUser = async (): Promise<User> => {
+  try {
+    const response = await axiosClient.get("auth/user", {
+      withCredentials: true,
+    });
+
+    return (response?.data as User) ?? null;
+  } catch (err) {
+    throw new Error((err as AxiosError).message);
+  }
+};
+
 export const register = async (data: UserAuthData): Promise<void> => {
   try {
     await axiosClient.post("auth/signup", data);
@@ -24,9 +36,9 @@ export const register = async (data: UserAuthData): Promise<void> => {
   }
 };
 
-export const signIn = async (data: UserAuthData): Promise<User> => {
+export const login = async (data: UserAuthData): Promise<User> => {
   try {
-    const response = await axiosClient.post("auth/signin", data, {
+    const response = await axiosClient.post("auth/login", data, {
       withCredentials: true,
     });
 
@@ -39,14 +51,15 @@ export const signIn = async (data: UserAuthData): Promise<User> => {
   }
 };
 
-export const verifyUser = async (): Promise<User> => {
+export const logout = async (): Promise<void> => {
   try {
-    const response = await axiosClient.get("auth/user", {
+    await axiosClient.post("auth/logout", null, {
       withCredentials: true,
     });
-
-    return (response?.data as User) ?? null;
   } catch (err) {
-    throw new Error((err as AxiosError).message);
+    if (err instanceof AxiosError) {
+      throw new Error(handleAxiosErrorMessage(err));
+    }
+    throw new Error((err as Error).message);
   }
 };

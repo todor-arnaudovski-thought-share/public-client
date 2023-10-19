@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { UserAuthData } from "../../../types/User";
-import { signIn } from "../../../api/authApi";
+import { login } from "../../../api/authApi";
 import { useUser } from "../../../store/UserContext";
 
-export const SignIn = () => {
+export const Login = () => {
   const [inputs, set_inputs] = useState<UserAuthData>({
     username: "",
     password: "",
@@ -25,7 +25,7 @@ export const SignIn = () => {
     e.preventDefault();
 
     try {
-      const user = await signIn(inputs);
+      const user = await login(inputs);
       if (user) {
         setUser(user);
       }

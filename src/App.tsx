@@ -2,9 +2,8 @@ import { Navbar } from "./layouts/navbar/Navbar";
 import { UserProvider } from "./store/UserContext";
 import { CreatePost } from "./components/createPost/CreatePost";
 import { PostsList } from "./components/postsList/PostsList";
-import { Register } from "./components/auth/register/Register";
-import { SignIn } from "./components/auth/signin/SignIn";
 import { PostsProvider } from "./store/PostsContext";
+import { Register, Login, Logout } from "./components/auth";
 
 function App() {
   return (
@@ -20,7 +19,8 @@ function App() {
               </div>
               <div className="col-span-12 lg:col-span-3">
                 <Register />
-                <SignIn />
+                <Login />
+                <Logout />
               </div>
             </div>
           </div>
