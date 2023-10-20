@@ -1,13 +1,6 @@
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { User } from "../types/User";
 import { Post } from "../types/Post";
-import { verifyUser } from "../api/authApi";
 
 interface UserContextDefault {
   user: User | null;
@@ -40,17 +33,6 @@ export function UserProvider({ children }: UserProviderProps) {
     username: null,
     upvotedPosts: [],
   });
-
-  useEffect(() => {
-    const fetchAndSetUser = async () => {
-      const fetchedUser = await verifyUser();
-      if (fetchedUser) {
-        set_user(fetchedUser);
-      }
-    };
-
-    fetchAndSetUser();
-  }, []);
 
   const addUpvotedPostToUserHandler = (post: Post) => {
     set_user((prevState) => ({

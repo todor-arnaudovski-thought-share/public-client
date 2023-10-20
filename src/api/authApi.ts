@@ -21,7 +21,10 @@ export const verifyUser = async (): Promise<User> => {
 
     return (response?.data as User) ?? null;
   } catch (err) {
-    throw new Error((err as AxiosError).message);
+    // if (err instanceof AxiosError) {
+    //   throw new Error(handleAxiosErrorMessage(err));
+    // }
+    throw new Error((err as Error).message);
   }
 };
 
