@@ -1,4 +1,8 @@
+import { useUser } from "../../store/UserContext";
+
 export const Navbar = () => {
+  const { user } = useUser();
+
   return (
     <>
       <div className="navbar bg-primary-content mb-5">
@@ -37,7 +41,9 @@ export const Navbar = () => {
           </div>
         </div>
         <div className="navbar-center">
-          <a className="btn btn-ghost normal-case text-xl">Mrchalo</a>
+          <a className="btn btn-ghost normal-case text-xl">
+            {user?.pubId ? `Logged in as: ${user?.username}` : "Not logged in"}
+          </a>
         </div>
         <div className="navbar-end">
           <button className="btn btn-ghost btn-circle">

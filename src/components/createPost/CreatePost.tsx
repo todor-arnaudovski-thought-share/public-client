@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createPost } from "../../api/postsApi";
+import { PostsService } from "../../services";
 import { usePosts } from "../../store/PostsContext";
 
 export const CreatePost = () => {
@@ -41,7 +41,7 @@ export const CreatePost = () => {
     };
 
     try {
-      const createdPost = await createPost(data);
+      const createdPost = await PostsService.createPost(data);
       if (createdPost) {
         addPost(createdPost);
         set_postContent("");

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { logout } from "../../../api/authApi";
+import { AuthService } from "../../../services";
 
 export const Logout = () => {
   const [error, set_error] = useState<string | null>(null);
 
   const logoutHandler = async () => {
     try {
-      await logout();
+      await AuthService.logout();
       window.location.reload();
     } catch (err) {
       set_error((err as Error).message);

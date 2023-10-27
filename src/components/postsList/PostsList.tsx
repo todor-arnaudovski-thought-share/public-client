@@ -3,7 +3,7 @@ import { getFormattedDate } from "../../utils/dates";
 import { Post, VoteActions } from "../../types/Post";
 import { useUser } from "../../store/UserContext";
 import { usePosts } from "../../store/PostsContext";
-import { downvotePost, fetchPosts, upvotePost } from "../../api/postsApi";
+import { PostsService } from "../../services";
 
 export const PostsList = () => {
   const { user, addUpvotedPostToUser, removeUpvotedPostFromUser } = useUser();
@@ -12,7 +12,7 @@ export const PostsList = () => {
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
-      const fetchedPosts = await fetchPosts();
+      const fetchedPosts = await PostsService.fetchPosts();
       if (fetchedPosts) {
         setPosts(fetchedPosts);
       }
@@ -38,13 +38,13 @@ export const PostsList = () => {
       const voteAction = determineVoteAction(post);
 
       if (voteAction === VoteActions.UPVOTE) {
-        const upvotedPost = await upvotePost(post.pubId);
+        const upvotedPost = await PostsService.upvotePost(post.pubId);
         if (upvotedPost) {
           updateUpvotedPost(upvotedPost);
           addUpvotedPostToUser(upvotedPost);
         }
       } else if (voteAction === VoteActions.DOWNVOTE) {
-        const downvotedPost = await downvotePost(post.pubId);
+        const downvotedPost = await PostsService.downvotePost(post.pubId);
         if (downvotedPost) {
           updateDownvotedPost(downvotedPost);
           removeUpvotedPostFromUser(downvotedPost);

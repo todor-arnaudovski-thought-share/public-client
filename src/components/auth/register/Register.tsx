@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { register } from "../../../api/authApi";
+import { AuthService } from "../../../services";
+import { useUser } from "../../../store/UserContext";
 
 interface UserRegisterData {
   username: string;
@@ -12,6 +13,7 @@ export const Register = () => {
     password: "",
   });
   const [error, set_error] = useState<string | null>(null);
+  const { setUser } = useUser();
 
   const onInputsChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.currentTarget.name;
@@ -27,7 +29,10 @@ export const Register = () => {
     e.preventDefault();
 
     try {
-      await register(inputs);
+      const user = await AuthService.register(inputs);
+      if (user) {
+        setUser(user);
+      }
     } catch (err) {
       set_error((err as Error).message);
     }

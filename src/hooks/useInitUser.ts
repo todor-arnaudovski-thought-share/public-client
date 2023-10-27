@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../store/UserContext";
-import { verifyUser } from "../api/authApi";
+import { AuthService } from "../services";
 
 export function useInitUser() {
   const [isInit, set_isInit] = useState(false);
@@ -9,7 +9,7 @@ export function useInitUser() {
   useEffect(() => {
     const fetchAndSetUser = async () => {
       try {
-        const verifiedUser = await verifyUser();
+        const verifiedUser = await AuthService.verifyUser();
         if (verifiedUser) {
           setUser(verifiedUser);
           set_isInit(true);
