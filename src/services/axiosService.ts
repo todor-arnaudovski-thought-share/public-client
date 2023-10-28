@@ -32,12 +32,41 @@ interface InternalAxiosRequestConfigWithRetry
   _isRetry: boolean;
 }
 
+interface BypassedRoute {
+  statusCodes: number[];
+}
+
+const routesToBypass: Record<string, BypassedRoute> = {
+  "auth/login": {
+    statusCodes: [401],
+  },
+};
+
+const shouldBypassRetryForRoute = (
+  url: string | undefined,
+  statusCode: number | undefined
+) => {
+  if (!url && !statusCode) return false; // do not bypass
+
+  if (url && statusCode)
+    // bypass status code for route
+    return (
+      Object.keys(routesToBypass).includes(url) &&
+      routesToBypass[url]?.statusCodes.includes(statusCode)
+    );
+};
+
 axiosInstance.interceptors.response.use(
   (res) => {
     return res;
   },
   async (err) => {
     if (err instanceof AxiosError) {
+      // bypass logic
+      if (shouldBypassRetryForRoute(err.config?.url, err.response?.status)) {
+        return Promise.reject(err);
+      }
+
       const originalRequest = err.config as InternalAxiosRequestConfigWithRetry;
       let refreshTokenError, res;
 
