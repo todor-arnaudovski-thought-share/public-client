@@ -1,23 +1,30 @@
 import { useState } from "react";
 import { AuthService } from "../../../services";
 import { useUser } from "../../../store/UserContext";
-
-interface UserRegisterData {
-  username: string;
-  password: string;
-}
+import { UserAuthData } from "../../../types/User";
+import {
+  ErrorMessageForProperty,
+  InputErrors,
+  errorsArrayToRecord,
+} from "../../../utils";
 
 export const Register = () => {
-  const [inputs, set_inputs] = useState<UserRegisterData>({
+  const [inputs, set_inputs] = useState<UserAuthData>({
     username: "",
     password: "",
   });
-  const [error, set_error] = useState<string | null>(null);
+  const [inputErrors, set_inputErrors] = useState<InputErrors | null>(null);
+  const [submitError, set_submitError] = useState<string | null>(null);
   const { setUser } = useUser();
 
   const onInputsChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
+
+    set_submitError(null);
+    set_inputErrors((prevState) => {
+      return { ...prevState, [name]: null };
+    });
 
     set_inputs((prevState) => ({
       ...prevState,
@@ -34,7 +41,11 @@ export const Register = () => {
         setUser(user);
       }
     } catch (err) {
-      set_error((err as Error).message);
+      if (typeof err === "object") {
+        set_inputErrors(errorsArrayToRecord(err as ErrorMessageForProperty[]));
+      } else {
+        set_submitError(err as string);
+      }
     }
   };
 
@@ -55,6 +66,11 @@ export const Register = () => {
             value={inputs.username}
             autoComplete="on"
           />
+          {inputErrors?.username && (
+            <span className="block text-red-500 mb-5">
+              {inputErrors.username}
+            </span>
+          )}
         </div>
         <div className="mb-5">
           <label className="label">
@@ -69,8 +85,15 @@ export const Register = () => {
             value={inputs.password}
             autoComplete="on"
           />
+          {inputErrors?.password && (
+            <span className="block text-red-500 mb-5">
+              {inputErrors.password}
+            </span>
+          )}
         </div>
-        {error && <span className="block text-red-500 mb-5">{error}</span>}
+        {submitError && (
+          <span className="block text-red-500 mb-5">{submitError}</span>
+        )}
         <button type="submit" className="btn btn-primary">
           Register
         </button>

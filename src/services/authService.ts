@@ -2,17 +2,6 @@ import { AxiosError } from "axios";
 import { User, UserAuthData } from "../types/User";
 import { axiosInstance } from "./axiosService";
 
-const handleAxiosErrorMessage = (err: AxiosError) => {
-  switch ((err as AxiosError).response?.status) {
-    case 401:
-      return "Wrong username or password";
-    case 409:
-      return "A user with that username already exists";
-    default:
-      return "An unexpected error occured";
-  }
-};
-
 export const AuthService = {
   verifyUser: async (): Promise<User> => {
     try {
@@ -35,8 +24,14 @@ export const AuthService = {
       return (response?.data as User) ?? null;
     } catch (err) {
       if (err instanceof AxiosError) {
-        throw new Error(handleAxiosErrorMessage(err));
+        if (err.response?.status === 409) {
+          err.response.data.message =
+            "A user with that username already exists";
+        }
+
+        throw err.response?.data?.message; // this could either be an array or a string
       }
+
       throw new Error((err as Error).message);
     }
   },
@@ -50,8 +45,11 @@ export const AuthService = {
       return (response?.data as User) ?? null;
     } catch (err) {
       if (err instanceof AxiosError) {
-        throw new Error(handleAxiosErrorMessage(err));
+        if (err.response?.status === 401) {
+          throw new Error("Wrong username or password");
+        }
       }
+
       throw new Error((err as Error).message);
     }
   },
@@ -66,9 +64,6 @@ export const AuthService = {
         }
       );
     } catch (err) {
-      if (err instanceof AxiosError) {
-        throw new Error(handleAxiosErrorMessage(err));
-      }
       throw new Error((err as Error).message);
     }
   },

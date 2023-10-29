@@ -43,8 +43,8 @@ const routesToBypass: Record<string, BypassedRoute> = {
 };
 
 const shouldBypassRetryForRoute = (
-  url: string | undefined,
-  statusCode: number | undefined
+  url: string | null,
+  statusCode: number | null
 ) => {
   if (!url && !statusCode) return false; // do not bypass
 
@@ -63,7 +63,12 @@ axiosInstance.interceptors.response.use(
   async (err) => {
     if (err instanceof AxiosError) {
       // bypass logic
-      if (shouldBypassRetryForRoute(err.config?.url, err.response?.status)) {
+      if (
+        shouldBypassRetryForRoute(
+          err.config?.url ?? null,
+          err.response?.status ?? null
+        )
+      ) {
         return Promise.reject(err);
       }
 

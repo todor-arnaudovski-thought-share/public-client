@@ -8,7 +8,11 @@ export const PostsService = {
       const response = await axiosInstance.get("posts");
       return response?.data ?? null;
     } catch (err) {
-      throw new Error((err as AxiosError).message);
+      if (err instanceof AxiosError) {
+        throw err.response?.data?.message;
+      }
+
+      throw new Error((err as Error).message);
     }
   },
 
@@ -19,7 +23,11 @@ export const PostsService = {
       });
       return response?.data ?? null;
     } catch (err) {
-      throw new Error((err as AxiosError).message);
+      if (err instanceof AxiosError) {
+        throw err.response?.data?.message;
+      }
+
+      throw new Error((err as Error).message);
     }
   },
 
@@ -34,7 +42,11 @@ export const PostsService = {
       );
       return response?.data ?? null;
     } catch (err) {
-      throw new Error((err as AxiosError).message);
+      if (err instanceof AxiosError) {
+        throw err.response?.data?.message;
+      }
+
+      throw new Error((err as Error).message);
     }
   },
 
@@ -49,7 +61,11 @@ export const PostsService = {
       );
       return response?.data ?? null;
     } catch (err) {
-      throw new Error((err as AxiosError).message);
+      if (err instanceof AxiosError) {
+        throw err.response?.data?.message;
+      }
+
+      throw new Error((err as Error).message);
     }
   },
 };

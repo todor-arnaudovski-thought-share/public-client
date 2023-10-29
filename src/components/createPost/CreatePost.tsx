@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { PostsService } from "../../services";
 import { usePosts } from "../../store/PostsContext";
+import {
+  ErrorMessageForProperty,
+  InputErrors,
+  errorsArrayToRecord,
+} from "../../utils";
 
 export const CreatePost = () => {
   const [postContent, set_postContent] = useState("");
-  const [errors, set_errors] = useState<{ postContent: string | null }>({
-    postContent: null,
-  });
+  const [inputErrors, set_inputErrors] = useState<InputErrors | null>(null);
   const { addPost } = usePosts();
 
   const onPostContentChangeHandler = (
@@ -20,9 +23,9 @@ export const CreatePost = () => {
     let errorCount = 0;
 
     if (!postContent.length) {
-      set_errors((prevState) => ({
+      set_inputErrors((prevState) => ({
         ...prevState,
-        postContent: "Cannot create empty post!",
+        content: "Cannot create an empty post",
       }));
       errorCount++;
     }
@@ -47,6 +50,9 @@ export const CreatePost = () => {
         set_postContent("");
       }
     } catch (err) {
+      if (typeof err === "object") {
+        set_inputErrors(errorsArrayToRecord(err as ErrorMessageForProperty[]));
+      }
       console.error((err as Error).message);
     }
   };
@@ -69,8 +75,8 @@ export const CreatePost = () => {
             Post
           </button>
         </div>
-        {errors.postContent && (
-          <span className="block text-red-500">{errors.postContent}</span>
+        {inputErrors?.content && (
+          <span className="block text-red-500">{inputErrors.content}</span>
         )}
       </form>
     </>
