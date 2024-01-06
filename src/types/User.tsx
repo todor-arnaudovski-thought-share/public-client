@@ -6,7 +6,13 @@ export interface User {
   upvotedPosts?: Post[];
 }
 
-export interface UserAuthData {
+export interface UserRegisterData {
+  email: string;
   username: string;
+  password: string;
+}
+
+export interface UserLoginData {
+  email: string;
   password: string;
 }

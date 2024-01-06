@@ -40,6 +40,9 @@ const routesToBypass: Record<string, BypassedRoute> = {
   "auth/login": {
     statusCodes: [401],
   },
+  "auth/email-confirmation": {
+    statusCodes: [401],
+  },
 };
 
 const shouldBypassRetryForRoute = (

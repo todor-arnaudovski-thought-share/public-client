@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AuthService } from "../../../services";
 import { useUser } from "../../../store/UserContext";
-import { UserAuthData } from "../../../types/User";
+import { UserRegisterData } from "../../../types";
 import {
   ErrorMessageForProperty,
   InputErrors,
@@ -9,7 +9,8 @@ import {
 } from "../../../utils";
 
 export const Register = () => {
-  const [inputs, set_inputs] = useState<UserAuthData>({
+  const [inputs, set_inputs] = useState<UserRegisterData>({
+    email: "",
     username: "",
     password: "",
   });
@@ -21,6 +22,7 @@ export const Register = () => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
 
+    // reset errors
     set_submitError(null);
     set_inputErrors((prevState) => {
       return { ...prevState, [name]: null };
@@ -53,6 +55,23 @@ export const Register = () => {
     <>
       <h2>Register</h2>
       <form className="mb-5" onSubmit={onFormSubmitHandler}>
+        <div className="mb-5">
+          <label className="label">
+            <span className="label-text">Email</span>
+          </label>
+          <input
+            type="email"
+            placeholder="Enter email"
+            className="input input-bordered w-full max-w-xs"
+            name="email"
+            onChange={onInputsChangeHandler}
+            value={inputs.email}
+            autoComplete="on"
+          />
+          {inputErrors?.email && (
+            <span className="block text-red-500 mb-5">{inputErrors.email}</span>
+          )}
+        </div>
         <div className="mb-5">
           <label className="label">
             <span className="label-text">Username</span>

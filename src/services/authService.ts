@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { User, UserAuthData } from "../types/User";
+import { User, UserLoginData, UserRegisterData } from "../types/User";
 import { axiosInstance } from "./axiosService";
 
 export const AuthService = {
@@ -15,7 +15,7 @@ export const AuthService = {
     }
   },
 
-  register: async (data: UserAuthData): Promise<User> => {
+  register: async (data: UserRegisterData): Promise<User> => {
     try {
       const response = await axiosInstance.post("auth/register", data, {
         withCredentials: true,
@@ -26,7 +26,7 @@ export const AuthService = {
       if (err instanceof AxiosError) {
         if (err.response?.status === 409) {
           err.response.data.message =
-            "A user with that username already exists";
+            "A user with this email or username already exists";
         }
 
         throw err.response?.data?.message; // this could either be an array or a string
@@ -36,7 +36,7 @@ export const AuthService = {
     }
   },
 
-  login: async (data: UserAuthData): Promise<User> => {
+  login: async (data: UserLoginData): Promise<User> => {
     try {
       const response = await axiosInstance.post("auth/login", data, {
         withCredentials: true,
@@ -45,9 +45,9 @@ export const AuthService = {
       return (response?.data as User) ?? null;
     } catch (err) {
       if (err instanceof AxiosError) {
-        if (err.response?.status === 401) {
-          throw new Error("Wrong username or password");
-        }
+        // if (err.response?.status === 401) {
+        throw new Error("Wrong email or password");
+        // }
       }
 
       throw new Error((err as Error).message);

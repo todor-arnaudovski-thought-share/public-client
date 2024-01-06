@@ -1,19 +1,22 @@
 import { useState } from "react";
-import { UserAuthData } from "../../../types/User";
 import { AuthService } from "../../../services";
 import { useUser } from "../../../store/UserContext";
+import { UserLoginData } from "../../../types";
 
 export const Login = () => {
-  const [inputs, set_inputs] = useState<UserAuthData>({
-    username: "",
+  const [inputs, set_inputs] = useState<UserLoginData>({
+    email: "",
     password: "",
   });
-  const [error, set_error] = useState<string | null>(null);
+  const [submitError, set_submitError] = useState<string | null>(null);
   const { setUser } = useUser();
 
   const onInputsChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
+
+    // reset errors
+    set_submitError(null);
 
     set_inputs((prevState) => ({
       ...prevState,
@@ -30,7 +33,7 @@ export const Login = () => {
         setUser(user);
       }
     } catch (err) {
-      set_error((err as Error).message);
+      set_submitError((err as Error).message);
     }
   };
 
@@ -40,15 +43,15 @@ export const Login = () => {
       <form className="mb-5" onSubmit={onFormSubmitHandler}>
         <div className="mb-5">
           <label className="label">
-            <span className="label-text">Username</span>
+            <span className="label-text">Email</span>
           </label>
           <input
             type="text"
-            placeholder="Enter username"
+            placeholder="Enter email"
             className="input input-bordered w-full max-w-xs"
-            name="username"
+            name="email"
             onChange={onInputsChangeHandler}
-            value={inputs.username}
+            value={inputs.email}
             autoComplete="on"
           />
         </div>
@@ -66,7 +69,9 @@ export const Login = () => {
             autoComplete="on"
           />
         </div>
-        {error && <span className="block text-red-500 mb-5">{error}</span>}
+        {submitError && (
+          <span className="block text-red-500 mb-5">{submitError}</span>
+        )}
         <button type="submit" className="btn btn-primary">
           Sign in
         </button>
